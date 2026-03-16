@@ -153,16 +153,16 @@ const FaqPage = () => {
                     <td className="p-4 text-sm text-gray-500 whitespace-nowrap">
                       {faq.created_at ? new Date(faq.created_at).toLocaleDateString() : "—"}
                     </td>
-                    <td className="p-4 text-sm text-right space-x-3 align-top">
+                    <td className="p-4 text-sm text-right space-x-10 align-top">
                       <button
                         onClick={() => handleEdit(faq)}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        className="text-blue-600 cursor-pointer hover:text-blue-800 font-medium"
                       >
                         Change
                       </button>
                       <button
                         onClick={() => handleDelete(faq.id)}
-                        className="text-red-600 hover:text-red-800 font-medium"
+                        className="text-red-600 cursor-pointer hover:text-red-800 font-medium"
                       >
                         Delete
                       </button>
