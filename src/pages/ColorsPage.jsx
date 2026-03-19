@@ -473,7 +473,7 @@ const ColorsPage = () => {
                           </span>
                         </td>
 
-                        <td className="max-w-[220px] truncate px-4 py-3 text-xs text-gray-500">
+                        <td className="max-w-55 truncate px-4 py-3 text-xs text-gray-500">
                           {color.id}
                         </td>
 
