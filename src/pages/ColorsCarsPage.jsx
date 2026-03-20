@@ -16,6 +16,41 @@ const ColorsCarsPage = () => {
   const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
 
+  const stringifyColorCars = (value) => {
+    if (value == null || value === "") return "";
+    if (typeof value === "string") return value;
+
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  };
+
+  const getColorCarsLabel = (value) => {
+    if (value == null || value === "") return "—";
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "—";
+
+      return value
+        .map((car) => {
+          if (car && typeof car === "object") {
+            return car.model || car.name || car.id || "Car";
+          }
+
+          return String(car);
+        })
+        .join(", ");
+    }
+
+    if (typeof value === "object") {
+      return value.model || value.name || value.id || stringifyColorCars(value);
+    }
+
+    return String(value);
+  };
+
   const fetchColorsCars = async () => {
     const data = await get("colors_with_cars?select=*&order=name.asc");
     setColorsCars(data || []);
@@ -52,7 +87,7 @@ const ColorsCarsPage = () => {
     setForm({
       name: item.name || "",
       hex_code: item.hex_code || "",
-      color_cars: item.color_cars || "",
+      color_cars: stringifyColorCars(item.color_cars),
     });
     setOpenRow(null);
   };
@@ -172,7 +207,9 @@ const ColorsCarsPage = () => {
                     </td>
 
                     <td className="p-3 text-gray-600 text-sm max-w-xs">
-                      <div className="truncate">{item.color_cars || "—"}</div>
+                      <div className="truncate">
+                        {getColorCarsLabel(item.color_cars)}
+                      </div>
                     </td>
 
                     <td className="p-3 space-x-2 whitespace-nowrap">
@@ -247,7 +284,7 @@ const ColorsCarsPage = () => {
                           <div>
                             <h4 className="font-semibold mb-3">Color Cars</h4>
                             <p className="text-gray-600 break-all">
-                              {item.color_cars || "—"}
+                              {stringifyColorCars(item.color_cars) || "—"}
                             </p>
                           </div>
                         </div>
