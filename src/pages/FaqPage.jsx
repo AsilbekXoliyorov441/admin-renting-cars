@@ -5,6 +5,7 @@ const FaqPage = () => {
   const { get, post, put, del, loading } = useApi();
 
   const [faqs, setFaqs] = useState([]);
+  const [openRow, setOpenRow] = useState(null);
 
   const emptyForm = {
     question: "",
@@ -51,6 +52,7 @@ const FaqPage = () => {
       question: faq.question || "",
       answer: faq.answer || "",
     });
+    setOpenRow(null);
   };
 
   const handleDelete = async (id) => {
@@ -116,7 +118,7 @@ const FaqPage = () => {
         <table className="w-full border">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3 text-left w-5">#</th>
+              <th className="p-3 text-left w-8">#</th>
               <th className="p-3 text-left">Question</th>
               <th className="p-3 text-left">Answer</th>
               <th className="p-3 text-left">Created At</th>
@@ -133,39 +135,83 @@ const FaqPage = () => {
               </tr>
             ) : (
               faqs.map((faq, index) => (
-                <tr key={faq.id} className="border-t hover:bg-gray-50">
-                  <td className="p-3 text-gray-400 text-sm">{index + 1}</td>
+                <React.Fragment key={faq.id}>
+                  {/* MAIN ROW */}
+                  <tr className="border-t hover:bg-gray-50">
+                    <td className="p-3 text-gray-400 text-sm">{index + 1}</td>
 
-                  <td className="p-3 font-medium max-w-xs">
-                    {faq.question}
-                  </td>
+                    <td className="p-3 font-medium max-w-xs">{faq.question}</td>
 
-                  <td className="p-3 text-gray-600 text-sm max-w-sm">
-                    <div className="line-clamp-2">{faq.answer}</div>
-                  </td>
+                    <td className="p-3 text-gray-600 text-sm max-w-sm">
+                      <div className="line-clamp-2">{faq.answer}</div>
+                    </td>
 
-                  <td className="p-3 text-gray-500 text-sm whitespace-nowrap">
-                    {faq.created_at
-                      ? new Date(faq.created_at).toLocaleDateString()
-                      : "—"}
-                  </td>
+                    <td className="p-3 text-gray-500 text-sm whitespace-nowrap">
+                      {faq.created_at
+                        ? new Date(faq.created_at).toLocaleDateString()
+                        : "—"}
+                    </td>
 
-                  <td className="p-3 space-x-2 whitespace-nowrap">
-                    <button
-                      onClick={() => handleEdit(faq)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded"
-                    >
-                      Edit
-                    </button>
+                    <td className="p-3 space-x-2 whitespace-nowrap">
+                      <button
+                        onClick={() =>
+                          setOpenRow(openRow === faq.id ? null : faq.id)
+                        }
+                        className="px-3 py-1 bg-gray-200 rounded"
+                      >
+                        Details
+                      </button>
 
-                    <button
-                      onClick={() => handleDelete(faq.id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
+                      <button
+                        onClick={() => handleEdit(faq)}
+                        className="px-3 py-1 bg-blue-500 text-white rounded"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(faq.id)}
+                        className="px-3 py-1 bg-red-500 text-white rounded"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+
+                  {/* DETAILS ROW */}
+                  {openRow === faq.id && (
+                    <tr className="bg-gray-50">
+                      <td colSpan="5" className="p-6">
+                        <div className="grid grid-cols-2 gap-6 text-sm">
+                          <div>
+                            <h4 className="font-semibold mb-3">Question</h4>
+                            <p className="text-gray-700">{faq.question}</p>
+                          </div>
+
+                          <div>
+                            <h4 className="font-semibold mb-3">Answer</h4>
+                            <p className="text-gray-600 leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 pt-4 border-t text-xs text-gray-400">
+                          <span className="mr-4">
+                            ID:{" "}
+                            <span className="font-mono">{faq.id}</span>
+                          </span>
+                          <span>
+                            Created:{" "}
+                            {faq.created_at
+                              ? new Date(faq.created_at).toLocaleString()
+                              : "—"}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))
             )}
           </tbody>
