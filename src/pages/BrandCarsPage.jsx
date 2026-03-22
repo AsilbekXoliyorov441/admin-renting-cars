@@ -51,6 +51,12 @@ const BrandCarsPage = () => {
     return String(value);
   };
 
+  const getBrandCarsCount = (value) => {
+    if (Array.isArray(value)) return value.length;
+    if (typeof value === "number") return value;
+    return 0;
+  };
+
   const fetchBrandCars = async () => {
     const data = await get("brands_with_cars?select=*&order=name.asc");
     setBrandCars(data || []);
@@ -162,6 +168,7 @@ const BrandCarsPage = () => {
               <th className="p-3 text-left">Logo</th>
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Brand Cars</th>
+              <th className="p-3 text-left">Cars Count</th>
               <th className="p-3 text-left">Actions</th>
             </tr>
           </thead>
@@ -169,7 +176,7 @@ const BrandCarsPage = () => {
           <tbody>
             {brandCars.length === 0 ? (
               <tr>
-                <td colSpan="4" className="text-center py-10 text-gray-400">
+                <td colSpan="5" className="text-center py-10 text-gray-400">
                   No records found.
                 </td>
               </tr>
@@ -204,6 +211,12 @@ const BrandCarsPage = () => {
                       </div>
                     </td>
 
+                    <td className="p-3 text-sm">
+                      <span className="font-semibold text-black">
+                        {getBrandCarsCount(item.brand_cars)}
+                      </span>
+                    </td>
+
                     <td className="p-3 space-x-2 whitespace-nowrap">
                       <button
                         onClick={() =>
@@ -233,7 +246,7 @@ const BrandCarsPage = () => {
                   {/* DETAILS ROW */}
                   {openRow === item.id && (
                     <tr className="bg-gray-50">
-                      <td colSpan="4" className="p-6">
+                      <td colSpan="5" className="p-6">
                         <div className="grid grid-cols-3 gap-6 text-sm">
                           <div>
                             <h4 className="font-semibold mb-3">Brand Info</h4>
@@ -270,7 +283,13 @@ const BrandCarsPage = () => {
                           <div>
                             <h4 className="font-semibold mb-3">Brand Cars</h4>
                             <p className="text-gray-600 break-all">
-                              {stringifyBrandCars(item.brand_cars) || "—"}
+                              {getBrandCarsLabel(item.brand_cars)}
+                            </p>
+                            <p className="mt-2 text-gray-600">
+                              Count:{" "}
+                              <span className="font-semibold text-black">
+                                {getBrandCarsCount(item.brand_cars)}
+                              </span>
                             </p>
                           </div>
                         </div>

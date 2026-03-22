@@ -51,6 +51,12 @@ const ColorsCarsPage = () => {
     return String(value);
   };
 
+  const getCarsCount = (value) => {
+    if (Array.isArray(value)) return value.length;
+    if (typeof value === "number") return value;
+    return 0;
+  };
+
   const fetchColorsCars = async () => {
     const data = await get("colors_with_cars?select=*&order=name.asc");
     setColorsCars(data || []);
@@ -206,10 +212,10 @@ const ColorsCarsPage = () => {
                       </span>
                     </td>
 
-                    <td className="p-3 text-gray-600 text-sm max-w-xs">
-                      <div className="truncate">
-                        {getColorCarsLabel(item.color_cars)}
-                      </div>
+                    <td className="p-3 text-sm">
+                      <span className="font-semibold">
+                        {getCarsCount(item.color_cars)}
+                      </span>
                     </td>
 
                     <td className="p-3 space-x-2 whitespace-nowrap">
@@ -283,8 +289,14 @@ const ColorsCarsPage = () => {
 
                           <div>
                             <h4 className="font-semibold mb-3">Color Cars</h4>
+                            <p className="mb-2 text-gray-600">
+                              Count:{" "}
+                              <span className="font-semibold">
+                                {getCarsCount(item.color_cars)}
+                              </span>
+                            </p>
                             <p className="text-gray-600 break-all">
-                              {stringifyColorCars(item.color_cars) || "—"}
+                              {getColorCarsLabel(item.color_cars)}
                             </p>
                           </div>
                         </div>
